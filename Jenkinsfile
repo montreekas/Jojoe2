@@ -22,12 +22,11 @@ pipeline {
         }
       }
     }
-	stage('Deployment') {
-        steps {
-			sh 'chmod +x modifyDeployment.sh'
-			sh "sed 's/tagversion/" + $BUILD_NUMBER + "/g' 03-webserver-deployment-pattern-autoscale.yaml"
-            sh 'kubectl apply -f 03-webserver-deployment-pattern-autoscale.yaml'
-        }
+	  stage('Deployment K8s') {
+      steps {
+			  sh "sed 's/tagversion/" + $BUILD_NUMBER + "/g' 03-webserver-deployment-pattern-autoscale.yaml"
+        sh 'kubectl apply -f 03-webserver-deployment-pattern-autoscale.yaml'
+      }
     }
     stage('Remove Unused docker image') {
       steps{
