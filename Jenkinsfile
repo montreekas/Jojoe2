@@ -1,34 +1,31 @@
 pipeline {
-    agent any
-
-    environment {
-        dockerImage = ''
+  environment {
+    registry = "montree/webserver"
+    registryCredential = 'dockerhub'
+    dockerImage = ''
+  }
+  agent any
+  stages {
+    stage('Building image') {
+      steps{
+        script {
+          dockerImage = docker.build registry + ":$BUILD_NUMBER"
+        }
+      }
     }
-
-    stages {
-        stage('Build image') {
-            steps {
-                script {
-                    dockerImage = docker.build("montree/webserver")
-                }
-            }
+    stage('Deploy Image') {
+      steps{
+        script {
+          docker.withRegistry( '', registryCredential ) {
+            dockerImage.push()
+          }
         }
-        stage('Push image') {
-            steps {
-                script {
-                    withDockerRegistry(
-                        credentialsId: 'dockerhub',
-                        url: 'https://index.docker.io/v1/') {
-                        dockerImage.push()
-                    }
-                }
-            }
-        }
-        stage('Deployment') {
-            steps {
-                sh 'kubectl apply -f 03-webserver-deployment-pattern-autoscale.yaml';
-            }
-        }
+      }
     }
+    stage('Remove Unused docker image') {
+      steps{
+        sh "docker rmi $registry:$BUILD_NUMBER"
+      }
+    }
+  }
 }
- 
