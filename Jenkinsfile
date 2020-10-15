@@ -24,7 +24,7 @@ pipeline {
     }
 	  stage('Deployment K8s') {
       steps {
-			  sh "sed 's/tagversion/" + $BUILD_NUMBER + "/g' 03-webserver-deployment-pattern-autoscale.yaml"
+			  sh "sed 's/tagversion/$BUILD_NUMBER/g' 03-webserver-deployment-pattern-autoscale.yaml"
         sh 'kubectl apply -f 03-webserver-deployment-pattern-autoscale.yaml'
       }
     }
