@@ -6,25 +6,21 @@ pipeline {
     }
 
     stages {
-        stage('Build') {
-            steps {
-                sh 'mvn -B -DskipTests clean package'
-            }
-        }
-        stage('Test') {
-            steps {
-                sh 'mvn test'
-            }
-            post {
-                always {
-                    junit 'target/surefire-reports/*.xml'
-                }
-            }
-        }
+#        stage('Build') {
+#            steps {
+#                sh 'sudo su'
+#				sh 'docker build -t montree/webserver .'
+#            }
+#        }
+#        stage('Test') {
+#            steps {
+#                echo 'CI Tests for future use'
+#            }
+#        }
         stage('Build image') {
             steps {
                 script {
-                    dockerImage = docker.build("phayao/my-app")
+                    dockerImage = docker.build("montree/webserver")
                 }
             }
         }
@@ -32,7 +28,7 @@ pipeline {
             steps {
                 script {
                     withDockerRegistry(
-                        credentialsId: 'docker-credential',
+                        credentialsId: 'dockerhub',
                         url: 'https://index.docker.io/v1/') {
                         dockerImage.push()
                     }
@@ -41,7 +37,7 @@ pipeline {
         }
         stage('Deployment') {
             steps {
-                sh 'kubectl apply -f myapp-deployment.yml';
+                sh 'kubectl apply -f 03-webserver-deployment-pattern-autoscale.yaml';
             }
         }
     }
