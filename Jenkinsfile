@@ -25,7 +25,7 @@ pipeline {
 	stage('Deployment') {
         steps {
 			sh 'chmod +x modifyDeployment.sh'
-			sh './modifyDeployment.sh $BUILD_NUMBER'
+			sh "sed 's/tagversion/" + $BUILD_NUMBER + "/g' 03-webserver-deployment-pattern-autoscale.yaml"
             sh 'kubectl apply -f 03-webserver-deployment-pattern-autoscale.yaml'
         }
     }
