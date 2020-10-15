@@ -6,17 +6,6 @@ pipeline {
     }
 
     stages {
-#        stage('Build') {
-#            steps {
-#                sh 'sudo su'
-#				sh 'docker build -t montree/webserver .'
-#            }
-#        }
-#        stage('Test') {
-#            steps {
-#                echo 'CI Tests for future use'
-#            }
-#        }
         stage('Build image') {
             steps {
                 script {
