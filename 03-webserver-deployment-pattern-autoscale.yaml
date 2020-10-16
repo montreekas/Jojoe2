@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       #- image: stm-registry.dmp.true.th:443/webdevops/php-nginx:v1.0.1
-      - image: registry:tagversion
+      - image: montree/jojoe2:tagversion
         name: webserver
         ports:
           - containerPort: 80
