@@ -1,6 +1,6 @@
 pipeline {
   environment {
-    registry = "montree/webserver"
+    registry = "montree/jojoe2"
     registryCredential = 'dockerhub'
     dockerImage = ''
   }
