@@ -26,7 +26,7 @@ pipeline {
 	  stage('Deployment K8s') {
       steps {
 			  sh "sed -i 's/tagversion/${BUILD_NUMBER}/g' 03-webserver-deployment-pattern-autoscale.yaml"
-        sh 'kubectl apply -f 03-webserver-deployment-pattern-autoscale.yaml'
+        sh 'kubectl apply -f 03-webserver-deployment-pattern-autoscale.yaml --record'
       }
     }
     stage('Remove Unused docker image') {
